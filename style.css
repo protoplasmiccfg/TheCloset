@@ -4,7 +4,7 @@ box-sizing:border-box;
 
 body{
 margin:0;
-font-family:Inter,system-ui;
+font-family:system-ui;
 background:#0f1117;
 color:#e6e6e6;
 height:100vh;
@@ -27,24 +27,23 @@ overflow:auto;
 
 .sidebar h2{
 margin-top:0;
-font-size:18px;
 color:#8ab4ff;
 }
 
 .category{
-margin-bottom:14px;
+margin-bottom:15px;
 }
 
 .category-title{
 font-weight:600;
-margin-bottom:6px;
+margin-bottom:5px;
 }
 
 .category-item{
-padding:4px 0;
 font-size:13px;
+opacity:.8;
 cursor:pointer;
-opacity:.75;
+padding:3px 0;
 }
 
 .category-item:hover{
@@ -61,6 +60,28 @@ overflow:auto;
 
 header{
 margin-bottom:20px;
+}
+
+/* tabs */
+
+.tabs{
+display:flex;
+gap:6px;
+margin-bottom:10px;
+}
+
+.tab{
+background:#161b22;
+border:1px solid #2a2f3a;
+padding:6px 12px;
+border-radius:6px;
+cursor:pointer;
+color:#ccc;
+}
+
+.tab.active{
+background:#3d7eff;
+color:white;
 }
 
 #search{
@@ -80,10 +101,11 @@ border:1px solid #2a2f3a;
 border-radius:10px;
 padding:16px;
 margin-bottom:14px;
+position:relative;
 }
 
 .card h3{
-margin:0 0 6px 0;
+margin:0 0 5px 0;
 }
 
 .meta{
@@ -123,7 +145,7 @@ button:hover{
 opacity:.9;
 }
 
-/* add form */
+/* add section */
 
 .add{
 margin-top:30px;
@@ -141,11 +163,8 @@ border:1px solid #2a2f3a;
 border-radius:6px;
 color:white;
 }
-/* edit icon */
 
-.card{
-position:relative;
-}
+/* edit icon */
 
 .edit-icon{
 position:absolute;
@@ -160,3 +179,40 @@ opacity:.7;
 .edit-icon:hover{
 opacity:1;
 }
+
+/* dropdown menu */
+
+.menu{
+position:absolute;
+top:36px;
+right:10px;
+background:#1c2230;
+border:1px solid #2a2f3a;
+border-radius:8px;
+overflow:hidden;
+z-index:10;
+}
+
+.menu div{
+padding:8px 12px;
+cursor:pointer;
+font-size:13px;
+}
+
+.menu div:hover{
+background:#2a3245;
+}
+
+.menu hr{
+border:none;
+border-top:1px solid #2a2f3a;
+margin:3px 0;
+}
+
+/* card colors */
+
+.card[data-color="red"]{background:#2a1717;}
+.card[data-color="blue"]{background:#16202f;}
+.card[data-color="green"]{background:#16291d;}
+.card[data-color="purple"]{background:#22162c;}
+.card[data-color="orange"]{background:#2b2014;}

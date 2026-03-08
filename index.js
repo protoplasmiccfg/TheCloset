@@ -4,7 +4,9 @@ const fitsContainer = document.getElementById("fits")
 const categoriesContainer = document.getElementById("categories")
 const searchInput = document.getElementById("search")
 
-/* normalize old / broken saved data */
+let editingIndex = null
+
+/* normalize old saved data */
 fits = fits.map(f => ({
 name: f.name || "Unnamed Fit",
 category: f.category || "Unsorted",
@@ -29,7 +31,16 @@ const cmd = document.getElementById("cmd").value.trim()
 
 const fit = { name, category, tags, cmd }
 
+if(editingIndex !== null){
+
+fits[editingIndex] = fit
+editingIndex = null
+
+}else{
+
 fits.push(fit)
+
+}
 
 saveFits()
 render()
@@ -38,6 +49,20 @@ document.getElementById("name").value=""
 document.getElementById("category").value=""
 document.getElementById("tags").value=""
 document.getElementById("cmd").value=""
+}
+
+function editFit(index){
+
+const f = fits[index]
+
+document.getElementById("name").value = f.name
+document.getElementById("category").value = f.category
+document.getElementById("tags").value = f.tags.join(", ")
+document.getElementById("cmd").value = f.cmd
+
+editingIndex = index
+
+window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})
 }
 
 function copyCommand(cmd){
@@ -50,29 +75,39 @@ const search = (searchInput.value || "").toLowerCase()
 
 fitsContainer.innerHTML=""
 
-const filtered = fits.filter(f =>
-(f.name || "").toLowerCase().includes(search) ||
-(f.tags || []).join(" ").toLowerCase().includes(search)
+const filtered = fits
+.map((fit,index)=>({fit,index}))
+.filter(o =>
+(o.fit.name || "").toLowerCase().includes(search) ||
+(o.fit.tags || []).join(" ").toLowerCase().includes(search)
 )
 
-filtered.forEach(f=>{
+filtered.forEach(o=>{
 
-const tagsHTML = (f.tags || [])
-.map(t=>`<span>${t}</span>`)
-.join("")
+const f = o.fit
+const index = o.index
+
+const tagsHTML = f.tags.map(t=>`<span>${t}</span>`).join("")
 
 const card = document.createElement("div")
 card.className="card"
 
 card.innerHTML = `
+<img src="icon1.png" class="edit-icon" title="Edit fit">
+
 <h3>${f.name}</h3>
 <div class="meta">${f.category}</div>
+
 <div class="tags">${tagsHTML}</div>
+
 <code>${f.cmd}</code>
-<button>Copy</button>
+
+<button class="copy-btn">Copy</button>
 `
 
-card.querySelector("button").onclick = () => copyCommand(f.cmd)
+card.querySelector(".copy-btn").onclick = () => copyCommand(f.cmd)
+
+card.querySelector(".edit-icon").onclick = () => editFit(index)
 
 fitsContainer.appendChild(card)
 
@@ -85,9 +120,9 @@ function renderCategories(){
 
 let categories = {}
 
-fits.forEach(f=>{
+fits.forEach((f,i)=>{
 if(!categories[f.category]) categories[f.category]=[]
-categories[f.category].push(f)
+categories[f.category].push({fit:f,index:i})
 })
 
 categoriesContainer.innerHTML=""
@@ -99,14 +134,14 @@ block.className="category"
 
 block.innerHTML=`<div class="category-title">${cat}</div>`
 
-categories[cat].forEach(f=>{
+categories[cat].forEach(o=>{
 
 const item=document.createElement("div")
 item.className="category-item"
-item.textContent=f.name
+item.textContent=o.fit.name
 
 item.onclick=()=>{
-searchInput.value=f.name
+searchInput.value=o.fit.name
 render()
 }
 
